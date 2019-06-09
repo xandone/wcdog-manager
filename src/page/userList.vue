@@ -3,19 +3,19 @@
         <headTop></headTop>
         <div>
             <el-table :data="tableData">
-                <el-table-column type="index" width="100">
+                <el-table-column type="index">
                 </el-table-column>
-                <el-table-column prop="userId" label="用户ID" width="100">
+                <el-table-column prop="userId" label="用户ID">
                 </el-table-column>
-                <el-table-column prop="name" label="用户名" width="150">
+                <el-table-column prop="name" label="用户名">
                 </el-table-column>
-                <el-table-column prop="password" label="用户密码" width="200">
+                <el-table-column prop="password" label="用户密码">
                 </el-table-column>
-                <el-table-column prop="nickname" label="用户昵称" width="200">
+                <el-table-column prop="nickname" label="用户昵称">
                 </el-table-column>
-                <el-table-column prop="registTime" label="注册时间" width="200">
+                <el-table-column prop="registTime" label="注册时间">
                 </el-table-column>
-                <el-table-column prop="lastLoginTime" label="最近登录日期" width="200">
+                <el-table-column prop="lastLoginTime" label="最近登录日期">
                 </el-table-column>
                 <el-table-column label="操作">
                     <template slot-scope="scope">

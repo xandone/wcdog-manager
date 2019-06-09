@@ -7,6 +7,7 @@ import jokeList from './page/jokeList.vue'
 import jokeAdd from './page/jokeAdd.vue'
 import imgLoop from './page/imgLoop.vue'
 import imgList from './page/imgList.vue'
+import login from './page/login.vue'
 
 Vue.use(Router)
 
@@ -14,6 +15,10 @@ export default new Router({
     mode: 'history',
     base: process.env.BASE_URL,
     routes: [{
+            path: '/login',
+            name: 'login',
+            component: login
+        }, {
             path: '/',
             name: 'home',
             component: Home,
