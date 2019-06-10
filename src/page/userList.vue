@@ -25,11 +25,11 @@
                 </el-table-column>
             </el-table>
             <div class="Pagination" style="text-align: left;margin-top: 10px;">
-                <el-pagination background @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage" :page-size="20" layout="total, prev, pager, next" :total="count">
+                <el-pagination background @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage" :page-size="15" layout="total, prev, pager, next" :total="count">
                 </el-pagination>
             </div>
             <el-dialog title="提示" :visible.sync="dialogVisible" width="25%" :before-close="handleClose">
-                <span>确定删除ID：{{tableData[0].id}}昵称:{{tableData[0].nickname}}这个用户吗？</span>
+                <span>确定删除ID：{{tableData[dealIndex].userId}}  昵称:{{tableData[dealIndex].nickname}}这个用户吗？</span>
                 <span slot="footer" class="dialog-footer">
                 <el-button @click="dialogVisible = false">取 消</el-button>
                 <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
@@ -40,7 +40,6 @@
 </template>
 <script>
 import headTop from '@/components/HeadTop.vue'
-import { getUserList } from '@/api/getData'
 export default {
     components: {
         headTop
@@ -49,14 +48,10 @@ export default {
         this.getUsers();
     },
     data() {
-        const item = {
-            date: '2016-05-02',
-            name: '王小虎',
-            address: '上海市普陀区金沙江路 1518 弄'
-        };
+        const item = {};
         return {
-            tableData: Array(5).fill(item),
-            page: 0,
+            tableData: Array(0).fill(item),
+            page: 1,
             row: 15,
             count: 0,
             currentPage: 1,
@@ -83,27 +78,39 @@ export default {
             console.log(`每页 ${val} 条`);
         },
         handleCurrentChange(val) {
+            console.log(val);
             this.currentPage = val;
-            this.page = (val - 1) * this.row;
+            this.page = val;
             this.getUsers()
         },
-        async getUsers() {
-            const Users = await getUserList({ page: this.page, row: this.row });
-            const data = Users.data;
-            this.count = Users.total;
-            this.tableData = [];
-            data.forEach(item => {
-                const tableData = {};
-                tableData.userId = item.userId;
-                tableData.name = item.name;
-                tableData.nickname = item.nickname;
-                tableData.password = item.password;
-                tableData.registTime = item.registTime;
-                tableData.lastLoginTime = item.lastLoginTime;
-                tableData.userIcon = item.userIcon;
-                this.tableData.push(tableData);
-                console.log(tableData.nickname);
-            })
+
+        getUsers() {
+            this.$axios.get(`/user/userlist`, {
+                    params: {
+                        page: this.page,
+                        row: this.row
+                    }
+                })
+                .then((response) => {
+                    const users = response.data;
+                    const data = users.data;
+                    this.count = users.total;
+                    this.tableData = [];
+                    data.forEach(item => {
+                        const tableData = {};
+                        tableData.userId = item.userId;
+                        tableData.name = item.name;
+                        tableData.nickname = item.nickname;
+                        tableData.password = item.password;
+                        tableData.registTime = item.registTime;
+                        tableData.lastLoginTime = item.lastLoginTime;
+                        tableData.userIcon = item.userIcon;
+                        this.tableData.push(tableData);
+                    })
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
         }
     }
 }
