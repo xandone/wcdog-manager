@@ -3,41 +3,41 @@
         <headTop></headTop>
         <el-col :span="15" :offset="4">
             <header class="form-header">新增段子</header>
-            <el-form label-width="110px" class="demo-formData">
-                <el-form-item label="段子标题">
-                    <el-input v-model="input" placeholder="请输入标题" style='width: 500px'></el-input>
+            <el-form label-width="110px" class="demo-formData" :model="ruleForm" :rules="rules" ref="ruleForm">
+                <el-form-item label="段子标题" prop="title">
+                    <el-input v-model="ruleForm.title" placeholder="请输入标题" style='width: 500px'></el-input>
                 </el-form-item>
                 <el-form-item label="段子种类">
-                    <el-select v-model="activityValue"  placeholder="activityValue">
+                    <el-select v-model="ruleForm.type" placeholder="ruleForm.type">
                         <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
                         </el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item label="上传首页图片">
                     <el-upload class="avatar-uploader" :action="baseUrl + '/v1/addimg/shop'" :show-file-list="false" :on-success="handleShopAvatarScucess" :before-upload="beforeAvatarUpload">
-                        <el-image style="width: 120px; height: 120px" class="avatar" v-if="formData.image_path" :src="formData.image_path" :fit="cover"></el-image>
+                        <el-image style="width: 120px; height: 120px" class="avatar" v-if="ruleForm.image_path" :src="ruleForm.image_path"></el-image>
                         <i v-else class="el-icon-plus avatar-uploader-icon"></i>
                     </el-upload>
                 </el-form-item>
-                <el-form-item label="选择标签">
-                    <div>
-                        <el-checkbox v-model="checked1" label="金典" border size="medium"></el-checkbox>
-                        <el-checkbox v-model="checked2" label="荤笑话" border size="medium"></el-checkbox>
-                        <el-checkbox v-model="checked3" label="精分" border size="medium"></el-checkbox>
-                    </div>
-                    <div style="margin-top: 10px">
-                        <el-checkbox v-model="checked4" label="脑残" border size="medium"></el-checkbox>
-                        <el-checkbox v-model="checked5" label="冷笑话" border size="medium"></el-checkbox>
-                    </div>
+                <el-form-item label="选择标签" prop='tags'>
+                    <el-checkbox-group v-model="ruleForm.tags">
+                        <el-checkbox name='tags' label="金典" border size="medium"></el-checkbox>
+                        <el-checkbox name='tags' label="荤笑话" border size="medium"></el-checkbox>
+                        <el-checkbox name='tags' label="精分" border size="medium"></el-checkbox>
+                        <div style="margin-top: 10px">
+                            <el-checkbox name='tags' label="脑残" border size="medium"></el-checkbox>
+                            <el-checkbox name='tags' label="冷笑话" border size="medium"></el-checkbox>
+                        </div>
+                    </el-checkbox-group>
+                </el-form-item>
+                <el-form-item class='edit-btn'>
+                    <el-button @click="submitForm('ruleForm')" type="primary">提交</el-button>
+                    <el-button @click="resetForm('ruleForm')">重置</el-button>
                 </el-form-item>
             </el-form>
             <div class="edit-area">
                 <div ref="editor" style="text-align:left"></div>
             </div>
-            <el-row class='edit-btn'>
-                <el-button type="primary">提交</el-button>
-                <el-button>重置</el-button>
-            </el-row>
         </el-col>
     </div>
 </template>
@@ -53,6 +53,7 @@ export default {
     },
     data() {
         return {
+            baseUrl,
             input: '',
             editorContent: '',
             options: [{
@@ -66,15 +67,21 @@ export default {
                 label: '听说'
             }],
             value: '',
-            activityValue: '选项1',
-            formData: {
+            ruleForm: {
+                title: '',
+                type: '网络',
+                tags: ['金典'],
                 image_path: 'https://upload-images.jianshu.io/upload_images/2518499-ac8c6a0db917e181.jpeg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240'
             },
-            checked1: true,
-            checked2: false,
-            checked3: false,
-            checked4: false,
-            checked5: false,
+            rules: {
+                title: [
+                    { required: true, message: '请输入段子标题', trigger: 'blur' },
+                    { min: 1, max: 20, message: '长度在 1 到 20 个字符', trigger: 'blur' }
+                ],
+                tags: [
+                    { type: 'array', required: true, message: '请至少选择一个标签', trigger: 'change' }
+                ]
+            }
         }
     },
     methods: {
@@ -83,6 +90,31 @@ export default {
         },
         beforeAvatarUpload() {},
         handleShopAvatarScucess() {},
+        resetForm(formName) {
+            // this.$refs['formName'].resetFields();
+            this.ruleForm = {
+                title: '',
+                type: '网络',
+                tags: ['金典'],
+                image_path: '',
+            };
+        },
+        submitForm(formName) {
+            this.$refs[formName].validate((valid) => {
+                if (valid) {
+                    alert('提交');
+                } else {
+                    this.openToast('请填写完整信息');
+                    return false;
+                }
+            });
+        },
+        openToast(msg) {
+            this.$notify.error({
+                title: '错误',
+                message: msg
+            });
+        },
     },
     mounted() {
         var editor = new E(this.$refs.editor)

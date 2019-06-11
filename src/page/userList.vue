@@ -28,7 +28,7 @@
                 <el-pagination background @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage" :page-size="15" layout="total, prev, pager, next" :total="count">
                 </el-pagination>
             </div>
-            <el-dialog title="提示" :visible.sync="dialogVisible" width="25%" :before-close="handleClose">
+            <el-dialog title="提示" :visible.sync="dialogVisible" width="25%">
                 <span>确定删除ID：{{tableData[dealIndex].userId}}  昵称:{{tableData[dealIndex].nickname}}这个用户吗？</span>
                 <span slot="footer" class="dialog-footer">
                 <el-button @click="dialogVisible = false">取 消</el-button>

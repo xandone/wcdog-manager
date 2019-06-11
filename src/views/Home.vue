@@ -21,6 +21,12 @@
                         <el-menu-item index="imgList">图片列表</el-menu-item>
                     </el-menu-item-group>
                 </el-submenu>
+                  <el-submenu index="4">
+                    <template slot="title"><i class="el-icon-setting"></i>管理员</template>
+                    <el-menu-item-group>
+                        <el-menu-item index="admin">人员列表</el-menu-item>
+                    </el-menu-item-group>
+                </el-submenu>
             </el-menu>
         </el-aside>
         <el-main style="padding: 0; overflow: auto;">
