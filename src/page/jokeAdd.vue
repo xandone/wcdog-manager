@@ -21,23 +21,23 @@
                 </el-form-item>
                 <el-form-item label="选择标签" prop='tags'>
                     <el-checkbox-group v-model="ruleForm.tags">
-                        <el-checkbox name='tags' label="金典" border size="medium"></el-checkbox>
-                        <el-checkbox name='tags' label="荤笑话" border size="medium"></el-checkbox>
-                        <el-checkbox name='tags' label="精分" border size="medium"></el-checkbox>
+                        <el-checkbox name='tags' label="0" border size="medium">金典</el-checkbox>
+                        <el-checkbox name='tags' label="1" border size="medium">荤笑话</el-checkbox>
+                        <el-checkbox name='tags' label="2" border size="medium">精分</el-checkbox>
                         <div style="margin-top: 10px">
-                            <el-checkbox name='tags' label="脑残" border size="medium"></el-checkbox>
-                            <el-checkbox name='tags' label="冷笑话" border size="medium"></el-checkbox>
+                            <el-checkbox name='tags' label="3" border size="medium">脑残</el-checkbox>
+                            <el-checkbox name='tags' label="4" border size="medium">冷笑话</el-checkbox>
                         </div>
                     </el-checkbox-group>
                 </el-form-item>
+                <div class="edit-area">
+                    <div ref="editor" style="text-align:left"></div>
+                </div>
                 <el-form-item class='edit-btn'>
                     <el-button @click="submitForm('ruleForm')" type="primary">提交</el-button>
                     <el-button @click="resetForm('ruleForm')">重置</el-button>
                 </el-form-item>
             </el-form>
-            <div class="edit-area">
-                <div ref="editor" style="text-align:left"></div>
-            </div>
         </el-col>
     </div>
 </template>
@@ -45,32 +45,45 @@
 import headTop from '@/components/HeadTop.vue'
 import E from 'wangeditor'
 import { baseUrl, baseImgPath } from '@/config/env'
+import { mapState } from 'vuex'
+import { getStore } from '@/utils/utils.js'
+import { USER_INFO_KEY } from '@/config/env'
 
 export default {
     name: 'editor',
     components: {
-        headTop
+        headTop,
+    },
+    computed: {
+        ...mapState([
+            'userId'
+        ])
+    },
+    created() {
+        this.initUserInfo();
     },
     data() {
         return {
+            info: {},
             baseUrl,
             input: '',
             editorContent: '',
+            editorText: '',
             options: [{
-                value: '选项1',
+                value: '0',
                 label: '网络'
             }, {
-                value: '选项2',
+                value: '1',
                 label: '自创'
             }, {
-                value: '选项3',
+                value: '2',
                 label: '听说'
             }],
             value: '',
             ruleForm: {
                 title: '',
-                type: '网络',
-                tags: ['金典'],
+                type: '0',
+                tags: ['0'],
                 image_path: 'https://upload-images.jianshu.io/upload_images/2518499-ac8c6a0db917e181.jpeg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240'
             },
             rules: {
@@ -85,8 +98,19 @@ export default {
         }
     },
     methods: {
-        getContent: function() {
-            alert(this.editorContent)
+        initUserInfo() {
+            let data = JSON.parse(getStore(USER_INFO_KEY));
+            if (!data) {
+                this.$router.push('login');
+                return;
+            }
+            this.info = data;
+        },
+        getEtContent() {
+            return this.editorContent;
+        },
+        getEtText() {
+            return this.editorText;
         },
         beforeAvatarUpload() {},
         handleShopAvatarScucess() {},
@@ -94,20 +118,43 @@ export default {
             // this.$refs['formName'].resetFields();
             this.ruleForm = {
                 title: '',
-                type: '网络',
-                tags: ['金典'],
+                type: '0',
+                tags: ['0'],
                 image_path: '',
             };
         },
         submitForm(formName) {
             this.$refs[formName].validate((valid) => {
                 if (valid) {
-                    alert('提交');
+                    this.addJokes();
                 } else {
                     this.openToast('请填写完整信息');
                     return false;
                 }
             });
+        },
+        addJokes() {
+            this.$axios.post(`/joke/add`, {
+                    title: this.ruleForm.title,
+                    jokeUserId: this.info.userId,
+                    content: this.getEtText(),
+                    contentHtml: this.getEtContent(),
+                    category: this.ruleForm.type,
+                    tags: JSON.stringify(this.ruleForm.tags),
+                })
+                .then((response) => {
+                    const result = response.data;
+                    const data = result.data;
+                    console.log(result.code);
+                    if (result && result.code === 200) {
+                        this.openSuccess('恭喜，发表成功!');
+                        this.resetForm();
+                    }
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
+
         },
         openToast(msg) {
             this.$notify.error({
@@ -115,11 +162,18 @@ export default {
                 message: msg
             });
         },
+        openSuccess(msg) {
+            this.$message({
+                message: msg,
+                type: 'success'
+            });
+        },
     },
     mounted() {
         var editor = new E(this.$refs.editor)
         editor.customConfig.onchange = (html) => {
             this.editorContent = html
+            this.editorText = editor.txt.text();
         }
         editor.create()
     }

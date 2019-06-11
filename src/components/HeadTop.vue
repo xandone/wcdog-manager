@@ -47,7 +47,7 @@ export default {
                 this.$router.push('login');
                 return;
             }
-            this.info = data.userBean;
+            this.info = data;
             console.log(this.info.nickname);
         },
         dealCommand(command) {

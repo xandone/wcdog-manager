@@ -11,12 +11,19 @@
                 <el-button class='btn' type="primary" @click="submitForm('ruleForm')">提交</el-button>
             </el-form-item>
         </el-form>
+        <span style="color: white">{{userId}} 11111</span>
     </div>
 </template>
 <script>
 import { setStore } from '@/utils/utils.js'
 import { USER_INFO_KEY } from '@/config/env'
+import { mapState } from 'vuex'
 export default {
+    computed: {
+        ...mapState([
+            'userId'
+        ])
+    },
     data() {
         var name = (rule, value, callback) => {
             if (value === '') {
@@ -74,7 +81,9 @@ export default {
                     const user = response.data;
                     if (user.code === 200) {
                         this.$router.push('manager');
-                        setStore(USER_INFO_KEY, user.data[0]);
+                        setStore(USER_INFO_KEY, user.data[0].userBean);
+                        this.$store.commit("initUserInfo", user.data[0].userBean.userId);
+
                     } else {
                         this.openToast(user.msg);
                     }

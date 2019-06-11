@@ -4,13 +4,16 @@ import Vuex from 'vuex'
 Vue.use(Vuex)
 
 export default new Vuex.Store({
-  state: {
+    state: {
+        'userId': '-1',
+    },
+    mutations: {
+        initUserInfo(state, id) {
+            console.log('store=' + id);
+            state.userId = id;
+        }
+    },
+    actions: {
 
-  },
-  mutations: {
-
-  },
-  actions: {
-
-  }
+    }
 })

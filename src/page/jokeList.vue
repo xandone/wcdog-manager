@@ -17,6 +17,9 @@
                         <el-form-item label="分类">
                             <span>{{ props.row.category }}</span>
                         </el-form-item>
+                        <el-form-item label="标签">
+                            <el-tag v-for='i in props.row.tags' size='small' type="success" style="margin-right: 10px">{{JOKE_TAGS[i]}}</el-tag>
+                        </el-form-item>
                         <el-form-item label="文章地址">
                             <el-link href="http://www.baidu.com" target='_blank' type="primary">{{ props.row.title }}</el-link>
                         </el-form-item>
@@ -50,6 +53,8 @@
 <script>
 import headTop from '@/components/HeadTop.vue'
 
+const JOKE_CATEGORY = { "0": "网络", "1": "自创", "2": "听说" };
+const JOKE_TAGS = { "0": "金典", "1": "荤笑话", "2": "精分", "3": "脑残", "4": "冷笑话" };
 export default {
     components: {
         headTop
@@ -59,6 +64,7 @@ export default {
     },
     data() {
         return {
+            JOKE_TAGS: JOKE_TAGS,
             tableData: [],
             page: 1,
             row: 15,
@@ -74,7 +80,7 @@ export default {
         handleCurrentChange(val) {
             this.currentPage = val;
             this.page = val;
-            this.getResturants()
+            this.getJokes()
         },
         getJokes() {
             this.$axios.get(`/joke/jokelist`, {
@@ -101,6 +107,17 @@ export default {
                         tableData.jokeUserNick = item.jokeUserNick;
                         tableData.postTimeStr = item.postTimeStr;
                         tableData.title = item.title;
+                        if (item.category) {
+                            tableData.category = JOKE_CATEGORY[item.category];
+                        } else {
+                            tableData.category = JOKE_CATEGORY['0'];
+                        }
+                        if (item.tags) {
+                            tableData.tags = JSON.parse(item.tags);
+                        } else {
+                            tableData.tags = ['0'];
+                        }
+
                         this.tableData.push(tableData);
                     })
                 })
