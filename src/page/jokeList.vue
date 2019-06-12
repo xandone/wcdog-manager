@@ -20,6 +20,9 @@
                         <el-form-item label="标签">
                             <el-tag v-for='i in props.row.tags' size='small' type="success" style="margin-right: 10px">{{JOKE_TAGS[i]}}</el-tag>
                         </el-form-item>
+                        <el-form-item label="首页图片">
+                            <el-image @click='showImg(props.$index,props.row)' style="width: 120px; height: 120px; margin-top:10px;" class="avatar" v-if="props.row.coverImg" :src="props.row.coverImg"></el-image>
+                        </el-form-item>
                         <el-form-item label="文章地址">
                             <el-link href="http://www.baidu.com" target='_blank' type="primary">{{ props.row.title }}</el-link>
                         </el-form-item>
@@ -35,11 +38,11 @@
                 </el-table-column>
                 <el-table-column property="jokeId" label="段子ID">
                 </el-table-column>
-                <el-table-column property="city" label="操作">
+                <el-table-column property="city" label="操作" width='250'>
                     <template slot-scope="scope">
                         <el-button size="mini" @click='dealEdit(scope.$index,scope.row)'>编辑</el-button>
-                        <el-button size="mini" type="Success">添加</el-button>
-                        <el-button size="mini" type="danger" @click='dialogVisible = true'>删除</el-button>
+                        <el-button size="mini" @click='dealDelete(scope.$index,scope.row)' type="danger">
+                            删除</el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -47,17 +50,33 @@
                 <el-pagination background @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage" :page-size="15" layout="total, prev, pager, next" :total="count">
                 </el-pagination>
             </div>
+            <el-dialog title="预览" :visible.sync="dialogImgVisible" width="30%">
+                <el-image style="width: 90%; height: auto; margin-top:10px;" class="avatar" v-if="selectTable.coverImg" :src="selectTable.coverImg"></el-image>
+            </el-dialog>
+            <el-dialog title="提示" :visible.sync="dialogVisible" width="25%">
+                <span>确定删除《{{selectTable.title}}》这个段子吗？</span>
+                <span slot="footer" class="dialog-footer">
+                <el-button @click="dialogVisible = false">取 消</el-button>
+                <el-button type="primary" @click="deleteJoke(selectIndex,selectTable.jokeId)">确 定</el-button>
+                </span>
+            </el-dialog>
         </div>
     </div>
 </template>
 <script>
 import headTop from '@/components/HeadTop.vue'
+import { mapState } from 'vuex'
 
 const JOKE_CATEGORY = { "0": "网络", "1": "自创", "2": "听说" };
 const JOKE_TAGS = { "0": "金典", "1": "荤笑话", "2": "精分", "3": "脑残", "4": "冷笑话" };
 export default {
     components: {
         headTop
+    },
+    computed: {
+        ...mapState([
+            'userId'
+        ])
     },
     created() {
         this.getJokes();
@@ -70,7 +89,10 @@ export default {
             row: 15,
             count: 100,
             currentPage: 1,
-            dialogVisible: false
+            dialogVisible: false,
+            dialogImgVisible: false,
+            selectTable: {},
+            selectIndex: -1,
         }
     },
     methods: {
@@ -125,7 +147,45 @@ export default {
                     console.log(error);
                 });
 
-        }
+        },
+        showImg(index, row) {
+            this.dialogImgVisible = true;
+            this.selectTable = row;
+        },
+        dealEdit(index, row) {
+            // this.dialogImgVisible = true;
+            // this.selectTable = row;
+        },
+        dealDelete(index, row) {
+            this.dialogVisible = true;
+            this.selectTable = row;
+            this.selectIndex=index;
+        },
+        deleteJoke(index,jokeId) {
+            this.dialogVisible = false
+            this.$axios.post(`/joke/delete`, {
+                    jokeId: jokeId,
+                    adminId: this.userId
+                })
+                .then((response) => {
+                    const result = response.data;
+                    const data = result.data;
+                    console.log(result.code);
+                    if (result && result.code === 200) {
+                        this.openSuccess('恭喜，删除成功!');
+                        this.tableData.splice(index, 1);
+                    }
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
+        },
+        openSuccess(msg) {
+            this.$message({
+                message: msg,
+                type: 'success'
+            });
+        },
     }
 
 }

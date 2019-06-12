@@ -29,7 +29,7 @@
                 </el-pagination>
             </div>
             <el-dialog title="提示" :visible.sync="dialogVisible" width="25%">
-                <span>确定删除ID：{{tableData[dealIndex].userId}}  昵称:{{tableData[dealIndex].nickname}}这个用户吗？</span>
+                <span>确定删除ID：{{selectTable.userId}}  昵称:{{selectTable.nickname}}这个用户吗？</span>
                 <span slot="footer" class="dialog-footer">
                 <el-button @click="dialogVisible = false">取 消</el-button>
                 <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
@@ -56,7 +56,8 @@ export default {
             count: 0,
             currentPage: 1,
             dialogVisible: false,
-            dealIndex: 0
+            dealIndex: 0,
+            selectTable: {},
         }
     },
     methods: {
@@ -64,7 +65,7 @@ export default {
 
         },
         dealDelete(index, row) {
-            this.dealIndex = index;
+            this.selectTable = row;
             this.dialogVisible = true;
         },
         handleClose(done) {

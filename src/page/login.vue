@@ -5,7 +5,7 @@
                 <el-input v-model="ruleForm.pass" autocomplete="off" placeholder='用户名'></el-input>
             </el-form-item>
             <el-form-item label="密　码" prop="checkPass">
-                <el-input type="password" v-model="ruleForm.checkPass" autocomplete="off" placeholder='密码'></el-input>
+                <el-input type="password" v-model="ruleForm.checkPass" autocomplete="off" placeholder='密码' show-password></el-input>
             </el-form-item>
             <el-form-item>
                 <el-button class='btn' type="primary" @click="submitForm('ruleForm')">提交</el-button>
