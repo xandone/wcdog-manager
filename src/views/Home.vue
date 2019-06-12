@@ -17,7 +17,7 @@
                 <el-submenu index="3">
                     <template slot="title"><i class="el-icon-setting"></i>图片管理</template>
                     <el-menu-item-group>
-                        <el-menu-item index="imgLoop">首页轮播</el-menu-item>
+                        <el-menu-item index="banner">首页轮播</el-menu-item>
                         <el-menu-item index="imgList">图片列表</el-menu-item>
                     </el-menu-item-group>
                 </el-submenu>

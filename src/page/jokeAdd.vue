@@ -27,7 +27,7 @@
                 </el-form-item>
                 <el-form-item label="选择标签" prop='tags'>
                     <el-checkbox-group v-model="ruleForm.tags">
-                        <el-checkbox name='tags' label="0" border size="medium">金典</el-checkbox>
+                        <el-checkbox name='tags' label="0" border size="medium">经典</el-checkbox>
                         <el-checkbox name='tags' label="1" border size="medium">荤笑话</el-checkbox>
                         <el-checkbox name='tags' label="2" border size="medium">精分</el-checkbox>
                         <div style="margin-top: 10px">

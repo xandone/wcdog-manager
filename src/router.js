@@ -5,7 +5,7 @@ import userList from './page/userList.vue'
 import manager from './page/manager.vue'
 import jokeList from './page/jokeList.vue'
 import jokeAdd from './page/jokeAdd.vue'
-import imgLoop from './page/imgLoop.vue'
+import banner from './page/banner.vue'
 import imgList from './page/imgList.vue'
 import login from './page/login.vue'
 import admin from './page/admin.vue'
@@ -44,9 +44,9 @@ export default new Router({
                 component: jokeAdd,
                 meta: ['段子管理', '新增段子'],
             }, {
-                path: '/imgLoop',
-                name: 'imgLoop',
-                component: imgLoop,
+                path: '/banner',
+                name: 'banner',
+                component: banner,
                 meta: ['图片管理', '首页轮播'],
             }, {
                 path: '/imgList',

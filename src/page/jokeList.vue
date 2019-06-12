@@ -50,7 +50,7 @@
                 <el-pagination background @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage" :page-size="15" layout="total, prev, pager, next" :total="count">
                 </el-pagination>
             </div>
-            <el-dialog title="预览" :visible.sync="dialogImgVisible" width="30%">
+            <el-dialog title="预览" :visible.sync="dialogImgVisible" width="50%">
                 <el-image style="width: 90%; height: auto; margin-top:10px;" class="avatar" v-if="selectTable.coverImg" :src="selectTable.coverImg"></el-image>
             </el-dialog>
             <el-dialog title="提示" :visible.sync="dialogVisible" width="25%">
@@ -68,7 +68,7 @@ import headTop from '@/components/HeadTop.vue'
 import { mapState } from 'vuex'
 
 const JOKE_CATEGORY = { "0": "网络", "1": "自创", "2": "听说" };
-const JOKE_TAGS = { "0": "金典", "1": "荤笑话", "2": "精分", "3": "脑残", "4": "冷笑话" };
+const JOKE_TAGS = { "0": "经典", "1": "荤笑话", "2": "精分", "3": "脑残", "4": "冷笑话" };
 export default {
     components: {
         headTop
@@ -87,7 +87,7 @@ export default {
             tableData: [],
             page: 1,
             row: 15,
-            count: 100,
+            count: 0,
             currentPage: 1,
             dialogVisible: false,
             dialogImgVisible: false,
