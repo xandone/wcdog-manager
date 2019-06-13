@@ -34,7 +34,7 @@
                 </el-table-column>
                 <el-table-column property="jokeUserNick" label="段子作者" width="220">
                 </el-table-column>
-                <el-table-column property="postTimeStr" label="发布时间">
+                <el-table-column property="postTime" label="发布时间">
                 </el-table-column>
                 <el-table-column property="jokeId" label="段子ID">
                 </el-table-column>
@@ -127,7 +127,7 @@ export default {
                         tableData.jokeUserIcon = item.jokeUserIcon;
                         tableData.jokeUserId = item.jokeUserId;
                         tableData.jokeUserNick = item.jokeUserNick;
-                        tableData.postTimeStr = item.postTimeStr;
+                        tableData.postTime = item.postTime;
                         tableData.title = item.title;
                         if (item.category) {
                             tableData.category = JOKE_CATEGORY[item.category];

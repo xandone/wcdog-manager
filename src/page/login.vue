@@ -11,7 +11,6 @@
                 <el-button class='btn' type="primary" @click="submitForm('ruleForm')">提交</el-button>
             </el-form-item>
         </el-form>
-        <span style="color: white">{{userId}} 11111</span>
     </div>
 </template>
 <script>

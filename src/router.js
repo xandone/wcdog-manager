@@ -8,6 +8,7 @@ import jokeAdd from './page/jokeAdd.vue'
 import banner from './page/banner.vue'
 import imgList from './page/imgList.vue'
 import login from './page/login.vue'
+import adminList from './page/adminList.vue'
 import admin from './page/admin.vue'
 
 Vue.use(Router)
@@ -54,10 +55,15 @@ export default new Router({
                 component: imgList,
                 meta: ['图片管理', '图片列表'],
             }, {
+                path: '/adminList',
+                name: 'adminList',
+                component: adminList,
+                meta: ['管理员', '人员列表'],
+            }, {
                 path: '/admin',
                 name: 'admin',
                 component: admin,
-                meta: ['管理员', '人员列表'],
+                meta: ['管理员', '管理员'],
             }]
         },
 

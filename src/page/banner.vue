@@ -55,10 +55,10 @@
                 <el-image style="width: 90%; height: auto; margin-top:10px;" class="avatar" v-if="selectTable.imgUrl" :src="selectTable.imgUrl"></el-image>
             </el-dialog>
             <el-dialog title="提示" :visible.sync="dialogVisible" width="25%">
-                <span>确定删除《{{selectTable.title}}》这个段子吗？</span>
+                <span>确定删除《{{selectTable.title}}》这个轮播吗？</span>
                 <span slot="footer" class="dialog-footer">
                 <el-button @click="dialogVisible = false">取 消</el-button>
-                <el-button type="primary" @click="deleteJoke(selectIndex,selectTable.jokeId)">确 定</el-button>
+                <el-button type="primary" @click="deleteBanner(selectIndex,selectTable.articelId)">确 定</el-button>
                 </span>
             </el-dialog>
         </div>
@@ -116,6 +116,7 @@ export default {
                         tableData.upTime = item.upTime;
                         tableData.title = item.title;
                         tableData.articleUrl = item.articleUrl;
+                        tableData.articelId = item.articelId;
                         this.tableData.push(tableData);
                     })
                 })
@@ -137,9 +138,24 @@ export default {
             this.selectTable = row;
             this.selectIndex = index;
         },
-        deleteJoke(index, jokeId) {
+        deleteBanner(index, articelId) {
             this.dialogVisible = false
-            this.openSuccess('删除测试中..');
+            this.$axios.post(`/banner/delete`, {
+                    articelId: articelId,
+                    adminId: this.userId
+                })
+                .then((response) => {
+                    const result = response.data;
+                    const data = result.data;
+                    console.log(result.code);
+                    if (result && result.code === 200) {
+                        this.openSuccess('恭喜，删除成功!');
+                        this.tableData.splice(index, 1);
+                    }
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
         },
         resetForm(formName) {
             this.ruleForm = {
@@ -167,7 +183,6 @@ export default {
                 })
                 .then((response) => {
                     const result = response.data;
-                    const data = result.data;
                     console.log(result.code);
                     if (result && result.code === 200) {
                         this.openSuccess('恭喜，新增成功!');

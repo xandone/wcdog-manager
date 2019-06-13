@@ -32,7 +32,7 @@
                 <span>确定删除ID：{{selectTable.userId}}  昵称:{{selectTable.nickname}}这个用户吗？</span>
                 <span slot="footer" class="dialog-footer">
                 <el-button @click="dialogVisible = false">取 消</el-button>
-                <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+                <el-button type="primary" @click="deleteUser(selectIndex,selectTable.userId)">确 定</el-button>
                 </span>
             </el-dialog>
         </div>
@@ -40,9 +40,13 @@
 </template>
 <script>
 import headTop from '@/components/HeadTop.vue'
+import { mapState } from 'vuex'
 export default {
     components: {
         headTop
+    },
+    computed: {
+        ...mapState(['userId'])
     },
     created() {
         this.getUsers();
@@ -56,8 +60,8 @@ export default {
             count: 0,
             currentPage: 1,
             dialogVisible: false,
-            dealIndex: 0,
             selectTable: {},
+            selectIndex: -1,
         }
     },
     methods: {
@@ -66,6 +70,7 @@ export default {
         },
         dealDelete(index, row) {
             this.selectTable = row;
+            this.selectIndex = index;
             this.dialogVisible = true;
         },
         handleClose(done) {
@@ -112,7 +117,34 @@ export default {
                 .catch((error) => {
                     console.log(error);
                 });
-        }
+        },
+        deleteUser(index, userId) {
+            this.dialogVisible = false
+            this.$axios.post(`/user/delete`, {
+                    userId: userId,
+                    adminId: this.userId
+                })
+                .then((response) => {
+                    const result = response.data;
+                    const data = result.data;
+                    console.log(result.code);
+                    if (result && result.code === 200) {
+                        this.openSuccess('恭喜，删除成功!');
+                        this.tableData.splice(index, 1);
+                    } else if (result.msg) {
+                        this.$message.error(result.msg);
+                    }
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
+        },
+        openSuccess(msg) {
+            this.$message({
+                message: msg,
+                type: 'success'
+            });
+        },
     }
 }
 </script>
