@@ -1,5 +1,10 @@
 <template>
     <div class="fillcontain login-bg">
+        <div class="logo-root">
+            <img class="dog-logo" src="@/assets/dog.jpg" alt="">
+            <div><span style="font-size: 15px;">WCDOG</span></div>
+            <div><span style="font-weight: bold;color: #666;font-size: 18px;" >管理系统</span></div>
+        </div>
         <el-form :model="ruleForm" status-icon :rules="rules" ref="ruleForm" label-width="80px" class="demo-ruleForm">
             <el-form-item label="用户名" prop="pass">
                 <el-input v-model="ruleForm.pass" autocomplete="off" placeholder='用户名'></el-input>
@@ -102,19 +107,16 @@ export default {
 </script>
 <style>
 .login-bg {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     background-color: #324057;
 }
 
 .demo-ruleForm {
     width: 320px;
     height: 210px;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    margin-top: -105px;
-    margin-left: -160px;
     padding: 25px;
-    border-radius: 5px;
     text-align: center;
     background-color: #fff;
 
@@ -122,5 +124,16 @@ export default {
 
 .btn {
     width: 100%
+}
+
+.logo-root {
+    height: 210px;
+    padding: 25px;
+    background-color: #fff;
+}
+
+.dog-logo {
+    width: 100px;
+    height: 100px;
 }
 </style>
