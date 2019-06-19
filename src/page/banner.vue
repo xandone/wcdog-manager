@@ -73,7 +73,7 @@ export default {
     },
     computed: {
         ...mapState([
-            'userId'
+            'adminId'
         ])
     },
     created() {
@@ -139,10 +139,10 @@ export default {
             this.selectIndex = index;
         },
         deleteBanner(index, articelId) {
-            this.dialogVisible = false
+            this.dialogVisible = false;
             this.$axios.post(`/banner/delete`, {
                     articelId: articelId,
-                    adminId: this.userId
+                    adminId: this.adminId
                 })
                 .then((response) => {
                     const result = response.data;
@@ -151,6 +151,8 @@ export default {
                     if (result && result.code === 200) {
                         this.openSuccess('恭喜，删除成功!');
                         this.tableData.splice(index, 1);
+                    }else{
+                     this.openToast(result.msg);   
                     }
                 })
                 .catch((error) => {

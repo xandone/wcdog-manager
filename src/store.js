@@ -5,12 +5,12 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
     state: {
-        'userId': '-1',
+        'adminId': '-1',
     },
     mutations: {
         initUserInfo(state, id) {
-            console.log('store=' + id);
-            state.userId = id;
+            console.log('store id=' + id);
+            state.adminId = id;
         }
     },
     actions: {

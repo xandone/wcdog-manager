@@ -46,7 +46,7 @@ export default {
         headTop
     },
     computed: {
-        ...mapState(['userId'])
+        ...mapState(['adminId'])
     },
     created() {
         this.getUsers();
@@ -91,7 +91,7 @@ export default {
         },
 
         getUsers() {
-            this.$axios.get(`/user/userlist`, {
+            this.$axios.get(`/admin/userlist`, {
                     params: {
                         page: this.page,
                         row: this.row
@@ -120,9 +120,9 @@ export default {
         },
         deleteUser(index, userId) {
             this.dialogVisible = false
-            this.$axios.post(`/user/delete`, {
+            this.$axios.post(`/admin/user/delete`, {
                     userId: userId,
-                    adminId: this.userId
+                    adminId: this.adminId
                 })
                 .then((response) => {
                     const result = response.data;

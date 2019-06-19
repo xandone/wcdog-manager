@@ -7,7 +7,7 @@
         <el-dropdown @command="dealCommand" style="font-size: 12px">
             <i class="el-icon-setting admin-tv" style="margin-right: 30px;">
               <span>{{info.nickname}}</span>
-          </i>
+            </i>
             <el-dropdown-menu slot="dropdown">
                 <el-dropdown-item command="userInfo">查看</el-dropdown-item>
                 <el-dropdown-item command="exit">退出</el-dropdown-item>
@@ -48,7 +48,7 @@ export default {
                 return;
             }
             this.info = data;
-            console.log(this.info.nickname);
+            this.$store.commit("initUserInfo", data.adminId);
         },
         dealCommand(command) {
             if (command == 'exit') {

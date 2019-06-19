@@ -5,11 +5,11 @@
             <header class="admin_title">管理员信息</header>
             <ul class="admin_set">
                 <li><span>用户名：</span><span>{{info.nickname}}</span></li>
-                <li><span>ID：</span><span>{{info.userId}}</span></li>
+                <li><span>ID：</span><span>{{info.adminId}}</span></li>
                 <li><span>注册时间：</span><span>{{info.registTime}}</span></li>
                 <li><span>头像：</span>
                     <div>
-                        <el-image style="width: 120px; height: 120px; margin-top:10px;" class="avatar" v-if="info.userIcon" :src="info.userIcon"></el-image>
+                        <el-image style="width: 120px; height: 120px; margin-top:10px;" class="avatar" v-if="info.adminIcon" :src="info.adminIcon"></el-image>
                     </div>
                 </li>
             </ul>

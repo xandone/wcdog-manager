@@ -37,7 +37,7 @@
                     </el-checkbox-group>
                 </el-form-item>
                 <div class="edit-area">
-                    <div ref="editor" style="text-align:left" ></div>
+                    <div ref="editor" style="text-align:left"></div>
                 </div>
                 <el-form-item class='edit-btn'>
                     <el-button @click="submitForm('ruleForm')" type="primary">提交</el-button>
@@ -62,7 +62,7 @@ export default {
     },
     computed: {
         ...mapState([
-            'userId'
+            'adminId'
         ])
     },
     created() {
@@ -142,7 +142,7 @@ export default {
         addJokes() {
             this.$axios.post(`/joke/add`, {
                     title: this.ruleForm.title,
-                    jokeUserId: this.info.userId,
+                    jokeUserId: this.info.adminId,
                     content: this.getEtText(),
                     contentHtml: this.getEtContent(),
                     category: this.ruleForm.type,
@@ -156,10 +156,13 @@ export default {
                     if (result && result.code === 200) {
                         this.openSuccess('恭喜，发表成功!');
                         this.resetForm();
+                    } else {
+                        this.openToast('系统异常');
                     }
                 })
                 .catch((error) => {
                     console.log(error);
+                    this.openToast('系统异常');
                 });
 
         },

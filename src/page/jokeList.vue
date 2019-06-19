@@ -2,7 +2,7 @@
     <div>
         <headTop></headTop>
         <div class="table_container">
-            <el-table :data="tableData" highlight-current-row style="width: 100%">
+            <el-table :data="tableData" highlight-current-row>
                 <el-table-column type='expand'>
                     <el-form slot-scope="props" label-position="left" inline class="demo-table-expand">
                         <el-form-item label="作者ID">
@@ -30,7 +30,7 @@
                 </el-table-column>
                 <el-table-column type="index" width="100">
                 </el-table-column>
-                <el-table-column property="title" label="标题" width="250">
+                <el-table-column property="title" label="标题" width="220">
                 </el-table-column>
                 <el-table-column property="jokeUserNick" label="段子作者" width="220">
                 </el-table-column>
@@ -38,7 +38,7 @@
                 </el-table-column>
                 <el-table-column property="jokeId" label="段子ID">
                 </el-table-column>
-                <el-table-column property="city" label="操作" width='250'>
+                <el-table-column property="city" label="操作">
                     <template slot-scope="scope">
                         <el-button size="mini" @click='dealEdit(scope.$index,scope.row)'>编辑</el-button>
                         <el-button size="mini" @click='dealDelete(scope.$index,scope.row)' type="danger">
@@ -75,7 +75,7 @@ export default {
     },
     computed: {
         ...mapState([
-            'userId'
+            'adminId'
         ])
     },
     created() {
@@ -159,13 +159,13 @@ export default {
         dealDelete(index, row) {
             this.dialogVisible = true;
             this.selectTable = row;
-            this.selectIndex=index;
+            this.selectIndex = index;
         },
-        deleteJoke(index,jokeId) {
+        deleteJoke(index, jokeId) {
             this.dialogVisible = false
-            this.$axios.post(`/joke/delete`, {
+            this.$axios.post(`/admin/joke/delete`, {
                     jokeId: jokeId,
-                    adminId: this.userId
+                    adminId: this.adminId
                 })
                 .then((response) => {
                     const result = response.data;

@@ -21,7 +21,7 @@ export default {
     },
     computed: {
         ...mapState([
-            'userId'
+            'adminId'
         ])
     },
     mounted() {
@@ -102,11 +102,11 @@ export default {
                         radius: '55%',
                         center: ['50%', '60%'],
                         data: [
-                            { value: 8, name: '荤笑话' },
-                            { value: 13, name: '精分' },
-                            { value: 18, name: '脑残' },
-                            { value: 5, name: '冷笑话' },
-                            { value: 39, name: '经典' },
+                            { value: flowBean.classicCount, name: '经典' },
+                            { value: flowBean.yellowCount, name: '荤笑话' },
+                            { value: flowBean.mindCount, name: '精分' },
+                            { value: flowBean.shiteCount, name: '脑残' },
+                            { value: flowBean.coldCount, name: '冷笑话' },
                         ],
                         itemStyle: {
                             emphasis: {
@@ -121,7 +121,7 @@ export default {
         getFlowData() {
             this.$axios.get(`/flow/flowData`, {
                     params: {
-                        adminId: this.userId
+                        adminId: this.adminId
                     }
                 })
                 .then((response) => {

@@ -25,7 +25,7 @@ import { mapState } from 'vuex'
 export default {
     computed: {
         ...mapState([
-            'userId'
+            'adminId'
         ])
     },
     data() {
@@ -77,7 +77,7 @@ export default {
         },
 
         login() {
-            this.$axios.post(`/user/login`, {
+            this.$axios.post(`/admin/login`, {
                     name: this.ruleForm.pass,
                     psw: this.ruleForm.checkPass
                 })
@@ -85,8 +85,8 @@ export default {
                     const user = response.data;
                     if (user.code === 200) {
                         this.$router.push('manager');
-                        setStore(USER_INFO_KEY, user.data[0].userBean);
-                        this.$store.commit("initUserInfo", user.data[0].userBean.userId);
+                        setStore(USER_INFO_KEY, user.data[0]);
+                        this.$store.commit("initUserInfo", user.data[0].adminId);
 
                     } else {
                         this.openToast(user.msg);
