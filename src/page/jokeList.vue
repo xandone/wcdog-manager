@@ -28,19 +28,19 @@
                         </el-form-item>
                     </el-form>
                 </el-table-column>
-                <el-table-column type="index" width="100">
+                <el-table-column type="index">
                 </el-table-column>
-                <el-table-column property="title" label="标题" width="220">
+                <el-table-column property="title" label="标题">
                 </el-table-column>
-                <el-table-column property="jokeUserNick" label="段子作者" width="220">
+                <el-table-column property="jokeUserNick" label="段子作者">
                 </el-table-column>
-                <el-table-column property="postTime" label="发布时间">
+                <el-table-column property="postTime" label="发布时间" sortable>
                 </el-table-column>
                 <el-table-column property="jokeId" label="段子ID">
                 </el-table-column>
                 <el-table-column property="city" label="操作">
                     <template slot-scope="scope">
-                        <el-button size="mini" @click='dealEdit(scope.$index,scope.row)'>编辑</el-button>
+                        <el-button size="mini" @click='dealComment(scope.$index,scope.row)'>评论</el-button>
                         <el-button size="mini" @click='dealDelete(scope.$index,scope.row)' type="danger">
                             删除</el-button>
                     </template>
@@ -60,18 +60,23 @@
                 <el-button type="primary" @click="deleteJoke(selectIndex,selectTable.jokeId)">确 定</el-button>
                 </span>
             </el-dialog>
+            <el-dialog title="评论列表" :visible.sync="dialogCommentVisible" width="60%">
+                <comment :jokeId="selectTable.jokeId" :isShowComment='dialogCommentVisible'></comment>
+            </el-dialog>
         </div>
     </div>
 </template>
 <script>
-import headTop from '@/components/HeadTop.vue'
+import headTop from '@/components/HeadTop'
+import comment from '@/components/comment'
 import { mapState } from 'vuex'
 
 const JOKE_CATEGORY = { "0": "网络", "1": "自创", "2": "听说" };
 const JOKE_TAGS = { "0": "经典", "1": "荤笑话", "2": "精分", "3": "脑残", "4": "冷笑话" };
 export default {
     components: {
-        headTop
+        headTop,
+        comment
     },
     computed: {
         ...mapState([
@@ -91,6 +96,7 @@ export default {
             currentPage: 1,
             dialogVisible: false,
             dialogImgVisible: false,
+            dialogCommentVisible: false,
             selectTable: {},
             selectIndex: -1,
         }
@@ -152,9 +158,10 @@ export default {
             this.dialogImgVisible = true;
             this.selectTable = row;
         },
-        dealEdit(index, row) {
-            // this.dialogImgVisible = true;
-            // this.selectTable = row;
+        dealComment(index, row) {
+            this.dialogCommentVisible = true;
+            this.selectTable = row;
+            this.selectIndex = index;
         },
         dealDelete(index, row) {
             this.dialogVisible = true;
