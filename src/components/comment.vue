@@ -52,7 +52,6 @@ export default {
             this.page = val;
         },
         getJokeComments() {
-            console.log('0000');
             this.$axios.get(`/joke/comment/list`, {
                     params: {
                         page: this.page,

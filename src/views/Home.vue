@@ -15,13 +15,20 @@
                     </el-menu-item-group>
                 </el-submenu>
                 <el-submenu index="3">
+                    <template slot="title"><i class="el-icon-setting"></i>公告管理</template>
+                    <el-menu-item-group>
+                        <el-menu-item index="plank">公告栏</el-menu-item>
+                        <el-menu-item index="talkList">说说列表</el-menu-item>
+                    </el-menu-item-group>
+                </el-submenu>
+                <el-submenu index="4">
                     <template slot="title"><i class="el-icon-setting"></i>图片管理</template>
                     <el-menu-item-group>
                         <el-menu-item index="banner">首页轮播</el-menu-item>
                         <el-menu-item index="imgList">图片列表</el-menu-item>
                     </el-menu-item-group>
                 </el-submenu>
-                  <el-submenu index="4">
+                <el-submenu index="5">
                     <template slot="title"><i class="el-icon-setting"></i>管理员</template>
                     <el-menu-item-group>
                         <el-menu-item index="adminList">人员列表</el-menu-item>

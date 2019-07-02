@@ -1,7 +1,7 @@
 <template>
     <div>
         <headTop></headTop>
-        图片列表
+        开发中..
     </div>
 </template>
 <script>

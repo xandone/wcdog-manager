@@ -10,6 +10,8 @@ import imgList from './page/imgList.vue'
 import login from './page/login.vue'
 import adminList from './page/adminList.vue'
 import admin from './page/admin.vue'
+import plank from './page/plank.vue'
+import talkList from './page/talkList.vue'
 
 Vue.use(Router)
 
@@ -44,6 +46,16 @@ export default new Router({
                 name: 'jokeAdd',
                 component: jokeAdd,
                 meta: ['段子管理', '新增段子'],
+            }, {
+                path: '/plank',
+                name: 'plank',
+                component: plank,
+                meta: ['公告管理', '公告栏'],
+            }, {
+                path: '/talkList',
+                name: 'talkList',
+                component: talkList,
+                meta: ['公告管理', '说说列表'],
             }, {
                 path: '/banner',
                 name: 'banner',

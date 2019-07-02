@@ -2,24 +2,19 @@
     <div class="fillcontain">
         <headTop></headTop>
         <div>
-            <el-table :data="tableData">
+            <el-table :data="talkData">
                 <el-table-column type="index">
                 </el-table-column>
-                <el-table-column prop="userId" label="用户ID">
+                <el-table-column prop="userNick" label="用户">
                 </el-table-column>
-                <el-table-column prop="name" label="用户名">
+                <el-table-column prop="userId" label="ID">
                 </el-table-column>
-                <el-table-column prop="password" label="用户密码">
+                <el-table-column prop="talk" label="内容">
                 </el-table-column>
-                <el-table-column prop="nickname" label="用户昵称">
-                </el-table-column>
-                <el-table-column prop="registTime" label="注册时间">
-                </el-table-column>
-                <el-table-column prop="lastLoginTime" label="最近登录日期">
+                <el-table-column prop="sendTime" label="日期">
                 </el-table-column>
                 <el-table-column label="操作">
                     <template slot-scope="scope">
-                        <el-button size="mini" @click="dealEdit(scope.$index, scope.row)">编辑</el-button>
                         <el-button size="mini" type="danger" @click="dealDelete(scope.$index, scope.row)">删除</el-button>
                     </template>
                 </el-table-column>
@@ -29,10 +24,10 @@
                 </el-pagination>
             </div>
             <el-dialog title="提示" :visible.sync="dialogVisible" width="25%">
-                <span>确定删除ID：{{selectTable.userId}}  昵称:{{selectTable.nickname}}这个用户吗？</span>
+                <span>确定删除《{{selectTable.talk}}》这条说说吗？</span>
                 <span slot="footer" class="dialog-footer">
                 <el-button @click="dialogVisible = false">取 消</el-button>
-                <el-button type="primary" @click="deleteUser(selectIndex,selectTable.userId)">确 定</el-button>
+                <el-button type="primary" @click="deleteTalk(selectIndex,selectTable.talkId)">确 定</el-button>
                 </span>
             </el-dialog>
         </div>
@@ -49,12 +44,11 @@ export default {
         ...mapState(['adminId'])
     },
     created() {
-        this.getUsers();
+        this.getTalkList();
     },
     data() {
-        const item = {};
         return {
-            tableData: Array(0).fill(item),
+            talkData: [],
             page: 1,
             row: 15,
             count: 0,
@@ -90,45 +84,48 @@ export default {
             this.getUsers()
         },
 
-        getUsers() {
-            this.$axios.get(`/admin/userlist`, {
+        getTalkList() {
+            this.$axios.get(`/plank/talkList`, {
                     params: {
                         page: this.page,
                         row: this.row
                     }
                 })
                 .then((response) => {
-                    const users = response.data;
-                    const data = users.data;
-                    this.count = users.total;
-                    this.tableData = [];
+                    const result = response.data;
+                    const data = result.data;
+                    this.talkData = [];
+                    this.count=result.total;
                     data.forEach(item => {
-                        const tableData = {};
-                        tableData.userId = item.userId;
-                        tableData.name = item.name;
-                        tableData.nickname = item.nickname;
-                        tableData.password = item.password;
-                        tableData.registTime = item.registTime;
-                        tableData.lastLoginTime = item.lastLoginTime;
-                        tableData.userIcon = item.userIcon;
-                        this.tableData.push(tableData);
+                        const talkItem = {};
+                        talkItem.talkId = item.talkId;
+                        talkItem.talk = item.talk;
+                        talkItem.userIcon = item.userIcon;
+                        talkItem.userId = item.userId;
+                        talkItem.userNick = item.userNick;
+                        talkItem.sendTime = item.sendTime;
+                        talkItem.sendTimeStr = item.sendTimeStr;
+                        this.talkData.push(talkItem);
                     })
                 })
                 .catch((error) => {
                     console.log(error);
                 });
+
         },
-        deleteUser(index, userId) {
+
+       deleteTalk(index, id) {
             this.dialogVisible = false
-            this.$axios.post(`/admin/user/delete`, {
-                    userId: userId,
-                    adminId: this.adminId
-                })
+            this.$axios.post(`/admin/talk/delete`,
+                    this.$qs.stringify({
+                        'id': id,
+                        'adminId': this.adminId
+                    }))
                 .then((response) => {
                     const result = response.data;
                     if (result && result.code === 200) {
                         this.openSuccess('恭喜，删除成功!');
-                        this.tableData.splice(index, 1);
+                        this.talkData.splice(index, 1);
                     } else if (result.msg) {
                         this.$message.error(result.msg);
                     }
@@ -136,6 +133,7 @@ export default {
                 .catch((error) => {
                     console.log(error);
                 });
+
         },
         openSuccess(msg) {
             this.$message({

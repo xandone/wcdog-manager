@@ -146,13 +146,11 @@ export default {
                 })
                 .then((response) => {
                     const result = response.data;
-                    const data = result.data;
-                    console.log(result.code);
                     if (result && result.code === 200) {
                         this.openSuccess('恭喜，删除成功!');
                         this.tableData.splice(index, 1);
-                    }else{
-                     this.openToast(result.msg);   
+                    } else {
+                        this.openToast(result.msg);
                     }
                 })
                 .catch((error) => {
@@ -185,10 +183,11 @@ export default {
                 })
                 .then((response) => {
                     const result = response.data;
-                    console.log(result.code);
+                    const item = result.data[0];
                     if (result && result.code === 200) {
                         this.openSuccess('恭喜，新增成功!');
-                        const tableData = {};
+                        let tableData = {};
+                        tableData.articelId = item.articelId;
                         tableData.imgUrl = this.ruleForm.imgUrl;
                         tableData.upTime = "刚刚";
                         tableData.title = this.ruleForm.title;
