@@ -75,20 +75,10 @@ export default {
         }
     },
     methods: {
-        dealEdit(index, row) {
-
-        },
         dealDelete(index, row) {
             this.selectTable = row;
             this.selectIndex = index;
             this.dialogVisible = true;
-        },
-        handleClose(done) {
-            this.$confirm('确认关闭？')
-                .then(_ => {
-                    done();
-                })
-                .catch(_ => {});
         },
         handleSizeChange(val) {
             console.log(`每页 ${val} 条`);
@@ -159,7 +149,7 @@ export default {
             });
         },
 
-        addPlank(content) {
+        addPlank() {
             this.$axios.post(`/admin/planktalk/add`,
                     this.$qs.stringify({
                         'content': this.ruleForm.title,
