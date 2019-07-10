@@ -1,6 +1,24 @@
 <template>
     <div class="fillcontain">
         <headTop></headTop>
+        <div class="search-root">
+            <el-form :model="ruleForm" label-width="110px" class="demo-formData" style="margin-top: 10px">
+                <el-form-item label="关键字" prop="title">
+                    <el-input v-model="keyWords" placeholder="请输入关键字" style='width: 600px' clearable>
+                        <el-select v-model="ruleForm.keySelect" slot="prepend" placeholder="ruleForm.keySelect" style="width: 130px;">
+                            <el-option label="全部" value="0"></el-option>
+                            <el-option label="用户ID" value="1"></el-option>
+                            <el-option label="用户账号" value="2"></el-option>
+                            <el-option label="用户昵称" value="3"></el-option>
+                        </el-select>
+                    </el-input>
+                </el-form-item>
+            </el-form>
+            <div style="text-align: left;padding-left: 110px;">
+                <el-button @click="dealSearchUser()" type="primary" size="small">确定</el-button>
+                <el-button @click="resetForm()" size="small">重置</el-button>
+            </div>
+        </div>
         <div>
             <el-table :data="tableData">
                 <el-table-column type="index">
@@ -19,13 +37,14 @@
                 </el-table-column>
                 <el-table-column label="操作">
                     <template slot-scope="scope">
-                        <el-button size="mini" @click="dealEdit(scope.$index, scope.row)">编辑</el-button>
+                        <el-switch @change="changeBanned(scope.row)" v-model="tableData[scope.$index].banned" active-value="0" inactive-value="1">
+                        </el-switch>
                         <el-button size="mini" type="danger" @click="dealDelete(scope.$index, scope.row)">删除</el-button>
                     </template>
                 </el-table-column>
             </el-table>
             <div class="Pagination" style="text-align: left;margin-top: 10px;">
-                <el-pagination background @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage" :page-size="15" layout="total, prev, pager, next" :total="count">
+                <el-pagination background @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage" :page-size="row" layout="total, prev, pager, next" :total="count">
                 </el-pagination>
             </div>
             <el-dialog title="提示" :visible.sync="dialogVisible" width="25%">
@@ -56,18 +75,20 @@ export default {
         return {
             tableData: Array(0).fill(item),
             page: 1,
-            row: 15,
+            row: 10,
             count: 0,
             currentPage: 1,
             dialogVisible: false,
             selectTable: {},
             selectIndex: -1,
+            keyWords: '',
+            ruleForm: {
+                keySelect: '0',
+            },
+            banned: "0"
         }
     },
     methods: {
-        dealEdit(index, row) {
-
-        },
         dealDelete(index, row) {
             this.selectTable = row;
             this.selectIndex = index;
@@ -136,6 +157,50 @@ export default {
                 .catch((error) => {
                     console.log(error);
                 });
+        },
+        dealSearchUser() {
+            let params = {
+                page: this.page,
+                row: this.row,
+            };
+            if (this.ruleForm.keySelect === "1") {
+                params.userId = encodeURI(this.keyWords);
+            } else if (this.ruleForm.keySelect === "2") {
+                params.name = encodeURI(this.keyWords);
+            } else if (this.ruleForm.keySelect === "3") {
+                params.nickname = encodeURI(this.keyWords);
+            }
+
+            this.$axios.get(`/admin/userlist/search`, {
+                    params
+                })
+                .then((response) => {
+                    const users = response.data;
+                    const data = users.data;
+                    this.count = users.total;
+                    this.tableData = [];
+                    data.forEach(item => {
+                        const tableData = {};
+                        tableData.userId = item.userId;
+                        tableData.name = item.name;
+                        tableData.nickname = item.nickname;
+                        tableData.password = item.password;
+                        tableData.registTime = item.registTime;
+                        tableData.lastLoginTime = item.lastLoginTime;
+                        tableData.userIcon = item.userIcon;
+                        this.tableData.push(tableData);
+                    })
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
+        },
+        resetForm() {
+            this.keyWords = '';
+            this.ruleForm.keySelect = '0';
+        },
+        changeBanned(bean) {
+            
         },
         openSuccess(msg) {
             this.$message({

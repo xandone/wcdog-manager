@@ -1,6 +1,37 @@
 <template>
-    <div>
+    <div class="fillcontain">
         <headTop></headTop>
+        <div class="search-root">
+            <el-form :model="ruleForm" label-width="110px" class="demo-formData" style="margin-top: 10px">
+                <el-form-item label="关键字" prop="title">
+                    <el-input v-model="keyWords" placeholder="请输入关键字" style='width: 600px' clearable>
+                        <el-select v-model="ruleForm.keySelect" slot="prepend" placeholder="ruleForm.keySelect" style="width: 130px;">
+                            <el-option label="标题名称" value="1"></el-option>
+                            <el-option label="文章ID" value="2"></el-option>
+                            <el-option label="作者ID" value="3"></el-option>
+                        </el-select>
+                    </el-input>
+                </el-form-item>
+            </el-form>
+            <el-form :model="ruleForm" :inline="true" label-width="110px" class="demo-formData" style="margin-top: 10px">
+                <el-form-item label="种类">
+                    <el-select v-model="ruleForm.selectType" placeholder="ruleForm.selectType">
+                        <el-option v-for="item in options1" :key="item.value" :label="item.label" :value="item.value">
+                        </el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="标签">
+                    <el-select v-model="ruleForm.selectTag" placeholder="ruleForm.selectTag">
+                        <el-option v-for="item in options2" :key="item.value" :label="item.label" :value="item.value">
+                        </el-option>
+                    </el-select>
+                </el-form-item>
+            </el-form>
+            <div style="text-align: left;padding-left: 110px;">
+                <el-button @click="dealSearchJokes()" type="primary" size="small">确定</el-button>
+                <el-button @click="resetForm()" size="small">重置</el-button>
+            </div>
+        </div>
         <div class="table_container">
             <el-table :data="tableData" highlight-current-row>
                 <el-table-column type='expand'>
@@ -47,7 +78,7 @@
                 </el-table-column>
             </el-table>
             <div class="Pagination" style="text-align: left;margin-top: 10px;">
-                <el-pagination background @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage" :page-size="15" layout="total, prev, pager, next" :total="count">
+                <el-pagination background @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage" :page-size="row" layout="total, prev, pager, next" :total="count">
                 </el-pagination>
             </div>
             <el-dialog title="预览" :visible.sync="dialogImgVisible" width="50%">
@@ -91,7 +122,7 @@ export default {
             JOKE_TAGS: JOKE_TAGS,
             tableData: [],
             page: 1,
-            row: 15,
+            row: 10,
             count: 0,
             currentPage: 1,
             dialogVisible: false,
@@ -99,6 +130,46 @@ export default {
             dialogCommentVisible: false,
             selectTable: {},
             selectIndex: -1,
+            options1: [{
+                value: '-1',
+                label: '全部'
+            }, {
+                value: '0',
+                label: '网络'
+            }, {
+                value: '1',
+                label: '自创'
+            }, {
+                value: '2',
+                label: '听说'
+            }],
+            options2: [{
+                value: '-1',
+                label: '全部'
+            }, {
+                value: '0',
+                label: '经典'
+            }, {
+                value: '1',
+                label: '荤笑话'
+            }, {
+                value: '2',
+                label: '精分'
+
+            }, {
+                value: '3',
+                label: '脑残'
+            }, {
+                value: '4',
+                label: '冷笑话'
+            }],
+            value: '',
+            keyWords: '',
+            ruleForm: {
+                keySelect: '1',
+                selectType: '-1',
+                selectTag: '-1',
+            },
         }
     },
     methods: {
@@ -176,8 +247,6 @@ export default {
                 })
                 .then((response) => {
                     const result = response.data;
-                    const data = result.data;
-                    console.log(result.code);
                     if (result && result.code === 200) {
                         this.openSuccess('恭喜，删除成功!');
                         this.tableData.splice(index, 1);
@@ -186,6 +255,81 @@ export default {
                 .catch((error) => {
                     console.log(error);
                 });
+        },
+
+        resetForm() {
+            this.ruleForm = {
+                keySelect: '1',
+                selectType: '-1',
+                selectTag: '-1',
+            };
+            this.keyWords = '';
+        },
+
+        dealSearchJokes() {
+            let params = {
+                page: this.page,
+                row: this.row,
+                category: encodeURI(this.ruleForm.selectType),
+                tags: encodeURI(this.ruleForm.selectTag)
+            };
+            if (this.ruleForm.keySelect === "1") {
+                params.key = encodeURI(this.keyWords);
+            } else if (this.ruleForm.keySelect === "2") {
+                params.jokeId = encodeURI(this.keyWords);
+            } else if (this.ruleForm.keySelect === "3") {
+                params.jokeUserId = encodeURI(this.keyWords);
+            }
+            this.$axios.get(`/joke/jokelist/search`, {
+                    params
+                })
+                .then((response) => {
+                    const joker = response.data;
+                    if (joker.code === 200) {
+                        const data = joker.data;
+                        this.count = joker.total;
+                        this.tableData = [];
+                        data.forEach(item => {
+                            const tableData = {};
+                            tableData.articleCommentCount = item.articleCommentCount;
+                            tableData.articleLikeCount = item.articleLikeCount;
+                            tableData.content = item.content;
+                            tableData.contentHtml = item.contentHtml;
+                            tableData.coverImg = item.coverImg;
+                            tableData.jokeId = item.jokeId;
+                            tableData.jokeUserIcon = item.jokeUserIcon;
+                            tableData.jokeUserId = item.jokeUserId;
+                            tableData.jokeUserNick = item.jokeUserNick;
+                            tableData.postTime = item.postTime;
+                            tableData.title = item.title;
+                            if (item.category) {
+                                tableData.category = JOKE_CATEGORY[item.category];
+                            } else {
+                                tableData.category = JOKE_CATEGORY['0'];
+                            }
+                            if (item.tags) {
+                                tableData.tags = JSON.parse(item.tags);
+                            } else {
+                                tableData.tags = ['0'];
+                            }
+
+                            this.tableData.push(tableData);
+                        })
+                        window.scrollTo(0, 0);
+                    } else {
+                        this.openToast(joker.msg);
+                    }
+
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
+        },
+        openToast(msg) {
+            this.$notify.error({
+                title: '错误',
+                message: msg
+            });
         },
         openSuccess(msg) {
             this.$message({
@@ -198,6 +342,11 @@ export default {
 }
 </script>
 <style>
+.fillcontain {
+    height: 100%;
+    width: 100%;
+}
+
 .demo-table-expand {
     font-size: 0;
 }
@@ -211,5 +360,17 @@ export default {
     margin-right: 0;
     margin-bottom: 0;
     width: 50%;
+}
+
+
+.input-with-select .el-input-group__prepend {
+    background-color: #fff;
+}
+
+.search-root {
+    padding: 20px;
+    margin: 20px;
+    border-radius: 5px;
+    border: 0.5px solid #f0f0f0;
 }
 </style>

@@ -151,8 +151,6 @@ export default {
                 })
                 .then((response) => {
                     const result = response.data;
-                    const data = result.data;
-                    console.log(result.code);
                     if (result && result.code === 200) {
                         this.openSuccess('恭喜，发表成功!');
                         this.resetForm();
