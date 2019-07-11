@@ -37,7 +37,7 @@
                 </el-table-column>
                 <el-table-column label="操作">
                     <template slot-scope="scope">
-                        <el-switch @change="changeBanned(scope.row)" v-model="tableData[scope.$index].banned" active-value="0" inactive-value="1">
+                        <el-switch @change="changeBanned(scope.row)" v-model="tableData[scope.$index].banned" active-value="1" inactive-value="0" active-text="禁言" style="margin-right: 30px;">
                         </el-switch>
                         <el-button size="mini" type="danger" @click="dealDelete(scope.$index, scope.row)">删除</el-button>
                     </template>
@@ -132,6 +132,7 @@ export default {
                         tableData.registTime = item.registTime;
                         tableData.lastLoginTime = item.lastLoginTime;
                         tableData.userIcon = item.userIcon;
+                        tableData.banned = item.banned.toString();
                         this.tableData.push(tableData);
                     })
                 })
@@ -188,6 +189,7 @@ export default {
                         tableData.registTime = item.registTime;
                         tableData.lastLoginTime = item.lastLoginTime;
                         tableData.userIcon = item.userIcon;
+                        tableData.banned = item.banned.toString();
                         this.tableData.push(tableData);
                     })
                 })
@@ -200,7 +202,28 @@ export default {
             this.ruleForm.keySelect = '0';
         },
         changeBanned(bean) {
-            
+            let user = JSON.stringify({
+                banned: bean.banned,
+                userId: bean.userId
+            });
+            let params = this.$qs.stringify({
+                adminId: "250",
+                jsonUser: user
+            });
+            this.dialogVisible = false
+            this.$axios.post(`/admin/user/update`, params)
+                .then((response) => {
+                    const result = response.data;
+                    if (result && result.code === 200) {
+                        this.openSuccess('恭喜，修改成功!');
+                    } else if (result.msg) {
+                        this.$message.error(result.msg);
+                    }
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
+
         },
         openSuccess(msg) {
             this.$message({
