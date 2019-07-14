@@ -8,7 +8,7 @@
                         <el-select v-model="ruleForm.keySelect" slot="prepend" placeholder="ruleForm.keySelect" style="width: 130px;">
                             <el-option label="全部" value="0"></el-option>
                             <el-option label="用户ID" value="1"></el-option>
-                            <el-option label="用户账号" value="2"></el-option>
+                            <el-option label="用户名" value="2"></el-option>
                             <el-option label="用户昵称" value="3"></el-option>
                         </el-select>
                     </el-input>
@@ -23,13 +23,13 @@
             <el-table :data="tableData">
                 <el-table-column type="index">
                 </el-table-column>
-                <el-table-column prop="userId" label="用户ID">
+                <el-table-column prop="userId" label="用户ID" width="150">
                 </el-table-column>
-                <el-table-column prop="name" label="用户名">
+                <el-table-column prop="name" label="用户名" width="150">
                 </el-table-column>
-                <el-table-column prop="password" label="用户密码">
+                <el-table-column prop="password" label="用户密码" width="150">
                 </el-table-column>
-                <el-table-column prop="nickname" label="用户昵称">
+                <el-table-column prop="nickname" label="用户昵称" width="150">
                 </el-table-column>
                 <el-table-column prop="registTime" label="注册时间">
                 </el-table-column>
@@ -37,7 +37,7 @@
                 </el-table-column>
                 <el-table-column label="操作">
                     <template slot-scope="scope">
-                        <el-switch @change="changeBanned(scope.row)" v-model="tableData[scope.$index].banned" active-value="1" inactive-value="0" active-text="禁言" style="margin-right: 30px;">
+                        <el-switch @change="changeBanned(scope.row)" v-model="tableData[scope.$index].banned" active-value="1" inactive-value="0" active-text="禁言" style="margin-right: 20px;">
                         </el-switch>
                         <el-button size="mini" type="danger" @click="dealDelete(scope.$index, scope.row)">删除</el-button>
                     </template>

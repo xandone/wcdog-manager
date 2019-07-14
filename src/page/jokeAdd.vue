@@ -70,6 +70,7 @@ export default {
     },
     data() {
         return {
+            editor:null,
             info: {},
             baseUrl,
             input: '',
@@ -128,6 +129,7 @@ export default {
                 tags: ['0'],
                 coverImg: '',
             };
+            this.editor.txt.clear();
         },
         submitForm(formName) {
             this.$refs[formName].validate((valid) => {
@@ -178,12 +180,12 @@ export default {
         },
     },
     mounted() {
-        var editor = new E(this.$refs.editor)
-        editor.customConfig.onchange = (html) => {
+        this.editor = new E(this.$refs.editor)
+        this.editor.customConfig.onchange = (html) => {
             this.editorContent = html
             this.editorText = editor.txt.text();
         }
-        editor.create()
+        this.editor.create()
     }
 
 }
