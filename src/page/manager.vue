@@ -2,8 +2,28 @@
     <div class="fillcontain ">
         <headTop></headTop>
         <header class="title">数据统计</header>
-        <v-chart :options="data1" style="width: 70%;height:450px;" />
-        <v-chart :options="data2" />
+        <div class="data-tag-root">
+            <el-tag effect="dark" color="#18A689" class="data-el-tag" style="height: 50px;">
+                <div class="data-tag"><span>{{flowBean.allUserCount}}</span><span>用户总数</span></div>
+            </el-tag>
+            <el-tag effect="dark" color="#99CC00" class="data-el-tag" style="height: 50px;">
+                <div class="data-tag"><span>{{flowBean.allAdminCount}}</span><span>帖子总数</span></div>
+            </el-tag>
+            <el-tag effect="dark" color="#3B5999" class="data-el-tag" style="height: 50px;">
+                <div class="data-tag"><span>{{flowBean.allJokeCount}}</span><span>留言总数</span></div>
+            </el-tag>
+            <el-tag effect="dark" color="#33CC99" class="data-el-tag" style="height: 50px;">
+                <div class="data-tag"><span>{{flowBean.allCommentCount}}</span><span>点赞总数</span></div>
+            </el-tag>
+            <el-tag effect="dark" color="#0099CC" class="data-el-tag" style="height: 50px;">
+                <div class="data-tag"><span>{{flowBean.allThumbCount}}</span><span>管理员数</span></div>
+            </el-tag>
+
+        </div>
+        <div class="chart-root">
+            <v-chart :options="data1" style="width: 50%;height:450px;" />
+            <v-chart :options="data2"  />
+        </div>
     </div>
 </template>
 <script>
@@ -39,7 +59,7 @@ export default {
             this.data1 = {
                     color: ["#64CDF0", "#F5686F"],
                     title: {
-                        text: '柱形图',
+                        text: '帖子类型分布',
                     },
                     xAxis: [{
                         type: "category",
@@ -89,7 +109,7 @@ export default {
                 },
                 this.data2 = {
                     title: {
-                        text: '饼状图',
+                        text: '帖子类型饼图',
                         x: 'left'
                     },
                     tooltip: {
@@ -128,6 +148,7 @@ export default {
                     const data = response.data;
                     const flowBean = data.data[0];
                     if (flowBean) {
+                        this.flowBean=flowBean;
                         this.initData(flowBean);
                     }
                 })
@@ -145,5 +166,34 @@ export default {
     font-size: 24px;
     color: #666;
     text-align: center;
+}
+
+.data-tag-root {
+    margin: 50px;
+    text-align: left;
+}
+
+.data-el-tag {
+    width: 100px;
+    margin-left: 10px;
+}
+
+.data-tag {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 50px;
+}
+
+.data-tag span {
+    color: white;
+    font-size: 15px;
+    line-height: 20px;
+}
+
+.chart-root {
+    display: flex;
+    margin-top:50px;
 }
 </style>

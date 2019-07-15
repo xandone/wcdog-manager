@@ -26,6 +26,10 @@ vue+vuex+vue Router+scss<br/>
 - [ ] 其他
 
 ### 效果预览
+![image](https://github.com/xandone/wcdog-manager/blob/master/pic/1.jpg)
+![image](https://github.com/xandone/wcdog-manager/blob/master/pic/2.jpg)
+![image](https://github.com/xandone/wcdog-manager/blob/master/pic/3.jpg)
+![image](https://github.com/xandone/wcdog-manager/blob/master/pic/4.jpg)
 
 
 ### 目录结构
