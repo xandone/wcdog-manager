@@ -1,3 +1,4 @@
+// let baseUrl = '//192.168.193.129:8081/wcdog';
 let baseUrl = '//localhost:8081/wcdog';
 
 let baseImgPath = '/img/';
