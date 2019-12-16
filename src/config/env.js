@@ -1,4 +1,4 @@
-let baseUrl = '//localhost:8081/wcdog';
+let baseUrl = '//localhost/wcdog';
 
 let baseImgPath = '/img/';
 
